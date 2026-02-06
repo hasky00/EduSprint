@@ -1,0 +1,18 @@
+export function uid(): string {
+  // simple uid suitable for client-side data
+  return crypto.randomUUID();
+}
+
+export function now(): number {
+  return Date.now();
+}
+
+export function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const s = Math.floor(seconds % 60)
+    .toString()
+    .padStart(2, "0");
+  return `${m}:${s}`;
+}
