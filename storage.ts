@@ -3,11 +3,20 @@ import { now } from "./utils";
 
 const STORAGE_KEY = "edusprint-db";
 
+function starterCards(createdAt: number): Card[] {
+  return [
+    { id: "starter-1", deckId: "default", front: "What is spaced repetition?", back: "A learning technique where reviews are scheduled at increasing intervals to improve long-term retention.", dueAt: createdAt, intervalDays: 0, ease: 2.3, reps: 0, lapses: 0, updatedAt: createdAt },
+    { id: "starter-2", deckId: "default", front: "What does the Pomodoro Technique involve?", back: "Working in focused intervals (typically 25 minutes) separated by short breaks.", dueAt: createdAt, intervalDays: 0, ease: 2.3, reps: 0, lapses: 0, updatedAt: createdAt },
+    { id: "starter-3", deckId: "default", front: "What is active recall?", back: "A study method where you actively test yourself on material rather than passively re-reading it.", dueAt: createdAt, intervalDays: 0, ease: 2.3, reps: 0, lapses: 0, updatedAt: createdAt },
+    { id: "starter-4", deckId: "default", front: "What is the best way to write a flashcard?", back: "Keep it atomic: one fact per card, short question on the front, concise answer on the back.", dueAt: createdAt, intervalDays: 0, ease: 2.3, reps: 0, lapses: 0, updatedAt: createdAt },
+  ];
+}
+
 function defaultDB(): DB {
   const createdAt = now();
   return {
     decks: [{ id: "default", name: "Default", createdAt }],
-    cards: [],
+    cards: starterCards(createdAt),
     sessions: [],
     activeDeckId: "default"
   };
