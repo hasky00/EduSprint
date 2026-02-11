@@ -38,14 +38,12 @@ export function exportJSON(db: DB): string {
 }
 
 export function importJSON(text: string): DB {
-  try {
-    const parsed = JSON.parse(text) as DB;
-    if (!parsed.decks || !parsed.cards) throw new Error("Missing decks/cards");
-    return parsed;
-  } catch (e) {
-    console.error("Invalid import", e);
-    return defaultDB();
+  const parsed = JSON.parse(text) as DB;
+  if (!Array.isArray(parsed.decks) || !Array.isArray(parsed.cards)) {
+    throw new Error("Invalid file: missing decks or cards arrays");
   }
+  if (!parsed.sessions) parsed.sessions = [];
+  return parsed;
 }
 
 export function dueCards(db: DB, deckId: string): Card[] {
@@ -55,7 +53,7 @@ export function dueCards(db: DB, deckId: string): Card[] {
 
 // Basic SM-2 style grading
 export function gradeCard(card: Card, grade: 0 | 1 | 2 | 3): Card {
-  const ease = Math.max(1.3, card.ease + (grade - 1));
+  const ease = Math.max(1.3, card.ease + (grade - 1) * 0.15);
   const intervalDays = grade === 0 ? 0.5 : Math.max(1, card.intervalDays * ease);
   const dueAt = now() + intervalDays * 24 * 60 * 60 * 1000;
   return {

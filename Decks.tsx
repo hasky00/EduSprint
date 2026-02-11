@@ -44,7 +44,7 @@ export default function Decks({
       <div className="sep" />
 
       <div className="row">
-        <input className="field" placeholder="New deck name" value={name} onChange={e => setName(e.target.value)} />
+        <input className="field" placeholder="New deck name" value={name} onChange={e => setName(e.target.value)} onKeyDown={e => { if (e.key === "Enter") addDeck(); }} />
         <button className="btn primary" onClick={addDeck}>Create Deck</button>
       </div>
 

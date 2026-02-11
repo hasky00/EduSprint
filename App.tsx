@@ -15,19 +15,17 @@ export default function App() {
 
   useEffect(() => saveDB(db), [db]);
 
-  // keyboard shortcuts for timer tab
+  // keyboard shortcuts for tab switching (work from any tab)
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (tab !== "study") return;
-      // We let StudyTimer handle its own state; these shortcuts are described there.
-      // (You can extend this later.)
+      if ((e.target as HTMLElement).tagName === "INPUT" || (e.target as HTMLElement).tagName === "TEXTAREA") return;
       if (e.key === "1") setTab("study");
       if (e.key === "2") setTab("decks");
       if (e.key === "3") setTab("quiz");
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [tab]);
+  }, []);
 
   const activeDeck = useMemo(
     () => db.decks.find(d => d.id === activeDeckId) ?? db.decks[0],
@@ -93,9 +91,13 @@ export default function App() {
 
   async function uploadImport(file: File | null) {
     if (!file) return;
-    const text = await file.text();
-    const imported = importJSON(text);
-    setDB(imported);
+    try {
+      const text = await file.text();
+      const imported = importJSON(text);
+      setDB(imported);
+    } catch (e) {
+      alert("Import failed: invalid file format.");
+    }
   }
 
   return (
@@ -247,28 +249,28 @@ function ReviewPanel({
       <div className="row">
         <button
           className="btn bad"
-          onClick={() => { onGrade(card.id, 0); setShowBack(false); setIdx(i => Math.min(i, due.length - 2)); }}
+          onClick={() => { onGrade(card.id, 0); setShowBack(false); setIdx(i => Math.max(0, Math.min(i, due.length - 2))); }}
           title="Again"
         >
           Again
         </button>
         <button
           className="btn"
-          onClick={() => { onGrade(card.id, 1); setShowBack(false); setIdx(i => Math.min(i, due.length - 2)); }}
+          onClick={() => { onGrade(card.id, 1); setShowBack(false); setIdx(i => Math.max(0, Math.min(i, due.length - 2))); }}
           title="Hard"
         >
           Hard
         </button>
         <button
           className="btn good"
-          onClick={() => { onGrade(card.id, 2); setShowBack(false); setIdx(i => Math.min(i, due.length - 2)); }}
+          onClick={() => { onGrade(card.id, 2); setShowBack(false); setIdx(i => Math.max(0, Math.min(i, due.length - 2))); }}
           title="Good"
         >
           Good
         </button>
         <button
           className="btn primary"
-          onClick={() => { onGrade(card.id, 3); setShowBack(false); setIdx(i => Math.min(i, due.length - 2)); }}
+          onClick={() => { onGrade(card.id, 3); setShowBack(false); setIdx(i => Math.max(0, Math.min(i, due.length - 2))); }}
           title="Easy"
         >
           Easy
