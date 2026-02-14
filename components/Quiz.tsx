@@ -28,7 +28,8 @@ export default function Quiz({ cards, deckId }: { cards: Card[]; deckId: string 
     if (!qs.length) return;
     const a = qs[i].answer.trim().toLowerCase();
     const g = guess.trim().toLowerCase();
-    const ok = g && (a === g || a.includes(g) || g.includes(a));
+    const minLen = Math.max(3, Math.floor(a.length * 0.5));
+    const ok = g && (a === g || (g.length >= minLen && a.includes(g)) || (g.length >= minLen && g.includes(a)));
     if (ok) setScore(s => s + 1);
     if (i + 1 >= qs.length) setDone(true);
     else {
