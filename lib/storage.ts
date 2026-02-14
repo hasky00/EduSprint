@@ -47,6 +47,14 @@ export function exportJSON(db: DB): string {
 }
 
 export function importJSON(text: string): DB {
+  try {
+    const parsed = JSON.parse(text) as DB;
+    if (!parsed.decks || !parsed.cards) throw new Error("Missing decks/cards");
+    return parsed;
+  } catch (e) {
+    console.error("Invalid import", e);
+    return defaultDB();
+  }
   const parsed = JSON.parse(text) as DB;
   if (!Array.isArray(parsed.decks) || !Array.isArray(parsed.cards)) {
     throw new Error("Invalid file: missing decks or cards arrays");
